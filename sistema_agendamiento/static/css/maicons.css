@@ -9,6 +9,29 @@
   font-style: normal;
   font-display: block;
 }
+.nav-link.btn-primary {
+  background-color: #007bff; /* Color de fondo predeterminado */
+  color: #fff; /* Color de texto predeterminado */
+}
+
+/* Estilo cuando se presiona un botón */
+.nav-link.btn-primary.active {
+  background-color: #ff5733; /* Cambia el color de fondo al presionar */
+  /* Puedes personalizar el color que desees */
+}
+
+.centered-button {
+  text-align: center;
+}
+
+.centered-button button {
+  font-size: 36px;
+  font-weight: bold;
+  background-color: rgb(34, 240, 96);
+  color: black;
+  padding: 10px 20px;
+  border-radius: 10px;
+}
 
 [class^="mai-"], [class*=" mai-"] {
   /* use !important to prevent issues with browser extensions that change fonts */

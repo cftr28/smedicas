@@ -326,7 +326,16 @@ progress {
   outline-offset: -2px;
   -webkit-appearance: none;
 }
+.nav-link.btn-primary {
+  background-color: #007bff; /* Color de fondo predeterminado */
+  color: #fff; /* Color de texto predeterminado */
+}
 
+/* Estilo cuando se presiona un botón */
+.nav-link.btn-primary.active {
+  background-color: #ff5733; /* Cambia el color de fondo al presionar */
+  /* Puedes personalizar el color que desees */
+}
 [type="search"]::-webkit-search-decoration {
   -webkit-appearance: none;
 }
@@ -528,6 +537,18 @@ pre {
   color: #212529;
 }
 
+.centered-button {
+  text-align: center;
+}
+
+.centered-button button {
+  font-size: 36px;
+  font-weight: bold;
+  background-color: yellow;
+  color: black;
+  padding: 10px 20px;
+  border-radius: 10px;
+}
 pre code {
   font-size: inherit;
   color: inherit;
@@ -4308,10 +4329,14 @@ input[type="button"].btn-block {
 
 .nav-pills .nav-link.active,
 .nav-pills .show > .nav-link {
-  color: #fff;
+  color: #3b06c1;
   background-color: #007bff;
 }
-
+.nav-item.active a {
+    background-color: #007bff; /* Cambiar el color de fondo cuando está activo */
+    color: #fff; /* Cambiar el color del texto cuando está activo */
+    /* Otros estilos adicionales si los deseas */
+}
 .nav-fill .nav-item {
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
@@ -4732,11 +4757,11 @@ input[type="button"].btn-block {
 }
 
 .navbar-dark .navbar-text a {
-  color: #fff;
+  color: #2ee6df;
 }
 
 .navbar-dark .navbar-text a:hover, .navbar-dark .navbar-text a:focus {
-  color: #fff;
+  color: #23b7ed;
 }
 
 .card {
@@ -4821,7 +4846,7 @@ input[type="button"].btn-block {
 .card-footer {
   padding: 0.75rem 1.25rem;
   background-color: rgba(0, 0, 0, 0.03);
-  border-top: 1px solid rgba(0, 0, 0, 0.125);
+  border-top: 1px solid rgba(48, 7, 209, 0.769);
 }
 
 .card-footer:last-child {

@@ -6,7 +6,16 @@
   License URI: https://creativecommons.org/licenses/by/4.0/
   Version: 1.0
  */
+ .nav-link.btn-primary {
+  background-color: #007bff; /* Color de fondo predeterminado */
+  color: #fff; /* Color de texto predeterminado */
+}
 
+/* Estilo cuando se presiona un botón */
+.nav-link.btn-primary.active {
+  background-color: #ff5733; /* Cambia el color de fondo al presionar */
+  /* Puedes personalizar el color que desees */
+}
 :root {
   --primary: #00D9A5;
   --accent: #FF3D85;
@@ -38,6 +47,18 @@ a:hover {
   text-decoration: underline;
 }
 
+.centered-button {
+  text-align: center;
+}
+
+.centered-button button {
+  font-size: 36px;
+  font-weight: bold;
+  background-color: rgb(34, 240, 96);
+  color: black;
+  padding: 10px 20px;
+  border-radius: 10px;
+}
 
 .text-xs {
   font-size: 12px !important;

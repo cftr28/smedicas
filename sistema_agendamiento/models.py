@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 class Carrera(models.Model):
-    OPCIONES_FACULTAD = (
+    OPCIONES_FACULTAD = ( 
         ('Agropecuaria y de Recursos Naturales Renovables', 'Agropecuaria y de Recursos Naturales Renovables'),
         ('Educación, el Arte y la Comunicación', 'Educación, el Arte y la Comunicación'),
         ('Energía, las Industrias y los Recursos Naturales no Renovables', 'Energía, las Industrias y los Recursos Naturales no Renovables'),

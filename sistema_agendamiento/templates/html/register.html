@@ -1,0 +1,31 @@
+{% load static %}
+{% include "html/nav.html" %}
+
+{% load crispy_forms_tags %}
+<div class="page-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 wow fadeInUp">
+                <form method="POST" class="body">
+                    {% csrf_token %}
+                    <div class="d-flex justify-content-center align-items-center vh-500">
+                        <div class="card mx-auto" style="width: 500px; height: auto;">
+                            <div class="card-body">
+                                <h5 class="card-title">Formulario de registro</h5>
+                                {{ form | crispy }}
+                                <a href="{% url 'index' %}" class="card-link">Inicio</a>
+                                <a href="{% url 'login' %}" class="card-link">Iniciar sesión</a>
+                                <div class="d-flex justify-content-center mt-3">
+                                    <button class="btn btn-primary" type="submit">Registrarse</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% include "html/finalpagina.html" %}
