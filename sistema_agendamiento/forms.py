@@ -16,34 +16,26 @@ class CustomUserCreationForm(UserCreationForm):
         model = User
         fields = ['username', 'email', 'first_name', 'last_name', 'password1', 'password2']
 
-class AsignaturaForm(forms.ModelForm):
+class EspecialidadForm(forms.ModelForm):
     class Meta:
-        model=Asignatura
+        model=Especialidad
         fields='__all__'
 
-class CarreraForm(forms.ModelForm):
+class DoctorForm(forms.ModelForm):
     class Meta:
-        model=Carrera
+        model=Doctor
         fields='__all__'
 
-class DocenteForm(forms.ModelForm):
+class CitaForm(forms.ModelForm):
     class Meta:
-        model=Docente
-        fields='__all__'
-
-class EstudianteForm(forms.ModelForm):
-    class Meta:
-        model=Estudiante
-        fields=['nombre', 'apellido', 'usuario', 'clave', 'sexo', 'carrera', 'asignatura']
+        model = Cita
+        fields = ['doctor', 'paciente', 'fecha', 'hora']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Filtrar las asignaturas basadas en la carrera seleccionada
-        if self.instance and self.instance.carrera:
-            self.fields['asignatura'].queryset = Asignatura.objects.filter(carrera=self.instance.carrera)
+        self.fields['hora'].widget = forms.Select(attrs={'class': 'select-hour'})
 
-class TutoriaForm(forms.ModelForm):
+class PacienteForm(forms.ModelForm):
     class Meta:
-        model=Tutoria
+        model=Paciente
         fields='__all__'
-

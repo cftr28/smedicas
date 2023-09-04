@@ -1,23 +1,19 @@
 from django.contrib import admin
 from .models import *
-from .models import Carrera, Asignatura, Docente
+from .models import Especialidad, Doctor,Paciente,Cita
 
-@admin.register(Docente)
-class DocenteAdmin(admin.ModelAdmin):
+@admin.register(Doctor)
+class DoctorAdmin(admin.ModelAdmin):
     pass
 
-@admin.register(Carrera)
-class CarreraAdmin(admin.ModelAdmin):
+@admin.register(Especialidad)
+class EspecialidadAdmin(admin.ModelAdmin):
     pass
 
-@admin.register(Asignatura)
-class AsignaturaAdmin(admin.ModelAdmin):
+@admin.register(Paciente)
+class PacienteAdmin(admin.ModelAdmin):
     pass
 
-@admin.register(Estudiante)
-class EstudianteAdmin(admin.ModelAdmin):
-    pass
-
-@admin.register(Tutoria)
-class TutoriaAdmin(admin.ModelAdmin):
+@admin.register(Cita)
+class CitaAdmin(admin.ModelAdmin):
     pass
