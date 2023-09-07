@@ -3,16 +3,90 @@
 
 {% load crispy_forms_tags %}
 
+<style>
+    .bg-transparent {
+        background-color: rgba(255, 255, 255, 0.3);
+    }
 
+    /* Estilos para hacer más grande el texto de las etiquetas */
+    .etiqueta-grande {
+        font-size: 1.5em;
+    }
 
+    /* Estilos para hacer más grande el texto en la tabla */
+    .tabla-grande {
+        font-size: 1.2em;
+    }
 
+    /* Estilos para hacer más grande el título y el botón */
+    .titulo-grande {
+        font-size: 3em;
+        /* Ajusta el tamaño de fuente como desees */
+    }
 
+    .boton-grande {
+        font-size: 2em;
+        /* Ajusta el tamaño de fuente como desees */
+    }
 
+    /* Estilos para hacer más grande el tamaño de los cuadros de entrada de texto */
+    .form-control {
+        font-size: 1.5em;
+        /* Ajusta el tamaño de fuente como desees */
+    }
+</style>
+<div class="container-fluid bg-transparent text-dark py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-4 py-4 bg-white mx-auto">
+            <h2 class="display-4 text-dark etiqueta-grande titulo-grande">Modificar Doctores</h2>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label etiqueta-grande">Nuevos Nombres:</label>
+                    <input type="text" class="form-control" id="nuevos_nombres" name="nuevos_nombres"
+                        value="{{ doctor.nombres }}" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label etiqueta-grande">Nuevos Apellidos:</label>
+                    <input type="text" class="form-control" id="nuevos_apellidos" name="nuevos_apellidos"
+                        value="{{ doctor.apellidos }}" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label etiqueta-grande">Nuevo Correo:</label>
+                    <input type="email" class="form-control" id="nuevo_correo" name="nuevo_correo"
+                        value="{{ doctor.correo }}" required>
+                </div>
 
+                <div class="mb-3">
+                    <label for="nuevo_especialidad">Nueva Especialidad:</label>
+                    <select class="form-control" id="nuevo_especialidad" name="nuevo_especialidad">
+                        <option value="">Seleccionar</option>
+                        {% for especialidad in lista_especialidades %}
+                        <option value="{{ especialidad.id }}" {% if especialidad.id == doctor.especialidad.id %}selected{% endif %}>
+                            {{ especialidad.nombre }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
 
+                <div class="mb-3">
+                    <label for="nuevo_paciente">Nuevos Pacientes:</label>
+                    <select class="form-control" id="slPacientes" name="slPacientes'" multiple>
+                        {% for paciente in lista_pacientes %}
+                        <option value="{{ paciente.id }}" {% if paciente in doctor.pacientes.all %}selected{% endif %}>
+                            {{ paciente.nombre }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-
-
-
-
+                <div class="pt-1 mb-0">
+                    <button class="btn btn-outline-success btn-lg btn-block btn-block boton-grande" type="submit">
+                        <span class="fs-3">Guardar Cambios</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% include "html/finalpagina.html" %}

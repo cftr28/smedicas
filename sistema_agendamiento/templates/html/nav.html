@@ -1,5 +1,6 @@
 {% load static %}
 {% load crispy_forms_tags %}
+
 <head>
 
     <meta charset="UTF-8">
@@ -20,7 +21,7 @@
     <link rel="stylesheet" href="/static/vendor/animate/animate.css">
 
     <link rel="stylesheet" href="/static/css/theme.css">
-    
+
 </head>
 
 <body>
@@ -56,24 +57,53 @@
                 <a class="navbar-brand" href="#"><span class="text-primary">One</span>-Health</a>
                 <div class="collapse navbar-collapse" id="navbarSupport">
                     <ul class="navbar-nav ml-auto">
+                        {% if es_superuser %}
                         <li class="nav-item">
-                            <a class="btn btn-primary ml-lg-3" href="/index">Inicio</a>
+                            <a class="btn btn-primary ml-lg-3" href="/gestionar_registros">Gestionar Registros</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-primary ml-lg-3" href="/logout">Cerrar Sesión</a>
+                     
+                        </li>
+                    
+                        {% else %}
+                        {% if not user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="btn btn-primary ml-lg-3" href="{% url 'index' %}">Inicio</a>
                         </li>
                         <li class="nav-item">
                             <a class="btn btn-primary ml-lg-3" href="/about">Acerca de Nosotros</a>
                         </li>
                         <li class="nav-item">
-                            <a class="btn btn-primary ml-lg-3"href="/contact">Contacto</a>
+                            <a class="btn btn-primary ml-lg-3" href="/contact">Contacto</a>
                         </li>
                         <li class="nav-item">
-                            <a class="btn btn-primary ml-lg-3" href="/cita">Agendar Cita</a>
-                        </li>
-                        <li class="nav-item ">
                             <a class="btn btn-primary ml-lg-3" href="/register">Registrarse</a>
                         </li>
                         <li class="nav-item">
                             <a class="btn btn-primary ml-lg-3" href="/login">Login</a>
                         </li>
+                       
+                        {% endif %}
+                        {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="btn btn-primary ml-lg-3" href="{% url 'index' %}">Inicio</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-primary ml-lg-3" href="/about">Acerca de Nosotros</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-primary ml-lg-3" href="/contact">Contacto</a>
+                        </li>
+                            <a class="btn btn-primary ml-lg-3" href="/cita">Agendar Cita</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-primary ml-lg-3" href="/logout">Cerrar Sesión</a>
+                     
+                        </li>
+                        {% endif %}
+                        {% endif %}
+                       
                     </ul>
                 </div> <!-- .navbar-collapse -->
             </div> <!-- .container -->
@@ -85,6 +115,3 @@
     </div> <!-- .bg-light -->
 
 </body>
-
-
-    

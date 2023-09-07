@@ -3,16 +3,93 @@
 
 {% load crispy_forms_tags %}
 
+<style>
+    .bg-transparent {
+        background-color: rgba(255, 255, 255, 0.3);
+    }
 
+    /* Estilos para hacer más grande el texto de las etiquetas */
+    .etiqueta-grande {
+        font-size: 1.5em;
+    }
 
+    /* Estilos para hacer más grande el texto en la tabla */
+    .tabla-grande {
+        font-size: 1.2em;
+    }
 
+    /* Estilos para hacer más grande el título y el botón */
+    .titulo-grande {
+        font-size: 3em;
+        /* Ajusta el tamaño de fuente como desees */
+    }
 
+    .boton-grande {
+        font-size: 2em;
+        /* Ajusta el tamaño de fuente como desees */
+    }
 
+    /* Estilos para hacer más grande el tamaño de los cuadros de entrada de texto */
+    .form-control {
+        font-size: 1.5em;
+        /* Ajusta el tamaño de fuente como desees */
+    }
+</style>
 
+<div class="container-fluid bg-transparent text-dark py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-4 py-4 bg-white mx-auto">
+            <h2 class="display-4 text-dark titulo-grande">Registrar Doctores</h2>
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li {% if message.tags %} class="alert alert-{{ message.tags }}" {% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            <form action="/registro_doctores/" method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label etiqueta-grande">Nombres</label>
+                    <input class="form-control" id="txtNombre" name="txtNombre" required placeholder="Nombre del Doctor" autofocus />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label etiqueta-grande">Apellidos</label>
+                    <input class="form-control" id="txtApellido" name="txtApellido" required placeholder="Apellido del Doctor" autofocus />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label etiqueta-grande">Correo</label>
+                    <input class="form-control" id="txtCorreo" name="txtCorreo" required placeholder="Correo del Doctor" autofocus />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label etiqueta-grande">Especialidad:</label>
+                    <select class="form-control" id="slEspecialidad" name="slEspecialidad" required>
+                        <option value="" disabled selected>Seleccione una especialidad</option>
+                        {% for especialidad in especialidades %}
+                        <option value="{{ especialidad.id }}">{{ especialidad.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label etiqueta-grande">Pacientes:</label>
+                    <select class="form-control" id="slPacientes" name="slPacientes" required>
+                        <option value="" disabled selected>Seleccione un Paciente</option>
+                        {% for paciente in lista_pacientes %}
+                        <option value="{{ paciente.id }}">{{ paciente.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-
-
-
+                {% csrf_token %}
+                <div class="pt-1 mb-0">
+                    <button class="btn btn-outline-success btn-lg btn-block btn-block boton-grande" type="submit">
+                        <span class="fs-3">Registrar</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 
 {% include "html/finalpagina.html" %}

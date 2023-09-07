@@ -58,19 +58,21 @@ def about(request):
 
 def registro_doctores(request):
     especialidades = Especialidad.objects.all()
+    pacientes = Paciente.objects.all()  # Obtener todos los pacientes
+
     if request.method == 'POST':
-        nombres = request.POST['txtNombre']
-        apellidos = request.POST['txtApellido']
-        correo = request.POST['txtCorreo']
-        especialidad_id = request.POST['slEspecialidad']
-        horario = request.FILES.get('txtHorario')
+        nombres = request.POST.get('txtNombre')
+        apellidos = request.POST.get('txtApellido')
+        correo = request.POST.get('txtCorreo')
+        especialidad_id = request.POST.get('slEspecialidad')
+
         try:
             especialidad = Especialidad.objects.get(pk=especialidad_id)
-            doctor = Doctor.objects.create(nombres=nombres, apellidos=apellidos, correo=correo, especialidad=especialidad, horario=horario)
-            
-            # Register patients
-            pacientes = request.POST.getlist('slPacientes')
-            for paciente_id in pacientes:
+            doctor = Doctor.objects.create(nombres=nombres, apellidos=apellidos, correo=correo, especialidad=especialidad)
+
+            # Registrar pacientes
+            pacientes_seleccionados = request.POST.getlist('slPacientes')
+            for paciente_id in pacientes_seleccionados:
                 paciente = Paciente.objects.get(pk=paciente_id)
                 doctor.pacientes.add(paciente)
 
@@ -78,16 +80,15 @@ def registro_doctores(request):
             return redirect("registro_doctores")
         except Exception as e:
             messages.error(request, 'No se pudo registrar el doctor: {}'.format(str(e)))
-    return render(request, 'html/registro_doctores.html', {"especialidades": especialidades})
 
-
+    return render(request, 'html/registro_doctores.html', {"especialidades": especialidades, "pacientes": pacientes})
 
 def gestion_doctores(request):
     listaDoctores = Doctor.objects.all()
     return render(request, "html/gestion_doctores.html", {"listaDoctores":listaDoctores})
 
-def eliminar_doctor(request, correo):
-    doctor = get_object_or_404(Doctor, correo=correo)
+def eliminar_doctor(request, nombres):
+    doctor = get_object_or_404(Doctor, nombres=nombres)
     if doctor:
         doctor.delete()
         messages.success(request, 'Doctor eliminado exitosamente')
@@ -95,47 +96,53 @@ def eliminar_doctor(request, correo):
     else:
         messages.error(request, 'No se pudo eliminar doctor')
 
-def modificar_doctor(request, correo):
-    doctor = get_object_or_404(Doctor, correo=correo)
+def modificar_doctor(request, nombres):
+    doctor = get_object_or_404(Doctor, nombres=nombres)
     lista_especialidades = Especialidad.objects.all()
+    lista_pacientes = Paciente.objects.all()
+    
     if request.method == 'POST':
-        nuevos_nombres = request.POST['nuevos_nombres']
-        nuevos_apellidos = request.POST['nuevos_apellidos']
-        nuevo_correo = request.POST['nuevo_correo']
-        nuevo_horario = request.FILES['nuevo_horario'] 
-        nuevo_especialidad_id = request.POST['nuevo_especialidad']if 'nuevo_especialidad' in request.FILES else None
-        nuevo_paciente_id =request.POST['nuevo_paciente']
+        nuevos_nombres = request.POST.get('nuevos_nombres')
+        nuevos_apellidos = request.POST.get('nuevos_apellidos')
+        nuevo_correo = request.POST.get('nuevo_correo')
+        nuevo_especialidad_id = request.POST.get('nuevo_especialidad')
+        nuevos_pacientes_ids = request.POST.getlist('nuevo_paciente')
+        
         doctor.nombres = nuevos_nombres
         doctor.apellidos = nuevos_apellidos
         doctor.correo = nuevo_correo
 
         if nuevo_especialidad_id:
-            doctor.nuevo_especialidad_id = nuevo_especialidad_id
-        doctor.nuevo_paciente_id = nuevo_paciente_id
+            especialidad = get_object_or_404(Especialidad, pk=nuevo_especialidad_id)
+            doctor.especialidad = especialidad
+
+        # Limpiar y agregar nuevos pacientes
+        doctor.pacientes.clear()
+        for paciente_id in nuevos_pacientes_ids:
+            paciente = get_object_or_404(Paciente, pk=paciente_id)
+            doctor.pacientes.add(paciente)
+
         doctor.save()
 
         return redirect('gestion_doctores')
 
-    return render(request, 'html/modificar_doctor.html', {'doctor': doctor, 'lista_especialidades':lista_especialidades})
-
-
-
+    return render(request, 'html/modificar_doctor.html', {'doctor': doctor, 'lista_especialidades': lista_especialidades, 'lista_pacientes': lista_pacientes})
 
 def registro_especialidades(request):
-    especialidad = Especialidad.objects.all()
+    especialidades = Especialidad.objects.all()
     if request.method == 'POST':
         nombre = request.POST['txtNombre']
         try:
-            especialidad = e.objects.create(nombre=nombre)
+            nueva_especialidad = Especialidad.objects.create(nombre=nombre)
             messages.success(request, 'Especialidad registrada exitosamente.')
             return redirect("registro_especialidades")
         except Exception as e:
             messages.error(request, 'No se pudo registrar la especialidad: {}'.format(str(e)))
-    return render(request, 'html/registro_especialidades.html', {"especialidad": especialidad})
+    return render(request, 'html/registro_especialidades.html', {"especialidades": especialidades})
 
 def gestion_especialidades(request):
     listaespecialidad = Especialidad.objects.all()
-    return render(request, "html/gestion_especialidades.html", {"listaEspecialidad":listaespecialidad})
+    return render(request, "html/gestion_especialidades.html", {"listaespecialidad":listaespecialidad})
 
 def eliminar_especialidad(request, nombre):
     especialidad = get_object_or_404(Especialidad, nombre=nombre)
@@ -157,23 +164,28 @@ def modificar_especialidad(request, nombre):
         return redirect('gestion_especialidades')
 
     return render(request, 'html/modificar_especialidad.html', {' especialidad':  especialidad})
-
 def registro_citas(request):
-    citas = Cita.objects.all()
+    doctores = Doctor.objects.all()
+    pacientes = Paciente.objects.all()
+    
     if request.method == 'POST':
-        doctor = request.POST['txtDoctor']
-        paciente = request.POST['txtPaciente']
-        fecha = request.POST['txtFecha']
-        hora = request.POST['txtHora']
+        doctor_id = request.POST.get('txtDoctor')
+        paciente_id = request.POST.get('txtPaciente')
+        fecha = request.POST.get('txtFecha')
+        hora = request.POST.get('txtHora')
+        
         try:
-            doctor = Doctor.objects.get(pk=doctor)
-            paciente = Paciente.objects.get(pk=paciente)
-            citas = Cita.objects.create(doctor= doctor, paciente=paciente,fecha=fecha,hora=hora)
+            doctor = Doctor.objects.get(pk=doctor_id)
+            paciente = Paciente.objects.get(pk=paciente_id)
+            
+            cita = Cita.objects.create(doctor=doctor, paciente=paciente, fecha=fecha, hora=hora)
             messages.success(request, 'Cita registrada exitosamente.')
             return redirect("registro_citas")
         except Exception as e:
             messages.error(request, 'No se pudo registrar la cita: {}'.format(str(e)))
-    return render(request, 'html/registro_citas.html', {"citas": citas})
+    
+    return render(request, 'html/registro_citas.html', {"doctores": doctores, "pacientes": pacientes})
+
 
 def gestion_citas(request):
     listacitas = Cita.objects.all()
@@ -188,42 +200,51 @@ def eliminar_citas(request, hora):
     else:
         messages.error(request, 'No se pudo eliminar la cita')
 
+
 def modificar_citas(request, hora):
     citas = get_object_or_404(Cita, hora=hora)
     lista_doctores = Doctor.objects.all()
     lista_pacientes = Paciente.objects.all()
+    
     if request.method == 'POST':
         nueva_doctor_id = request.POST['nueva_doctor']
         nueva_paciente_id = request.POST['nueva_paciente']
-        nueva_hora = request.POST['nueva_fecha']
-        nueva_fecha= request.POST['nueva_hora']
-
-        citas.doctor = nueva_doctor_id
-        citas.paciente = nueva_paciente_id
-        citas.fecha = nueva_fecha
+        nueva_hora = request.POST['nueva_hora']
+        nueva_fecha = request.POST['nueva_fecha']
+        
+        citas.doctor = lista_doctores.get(pk=nueva_doctor_id)
+        citas.paciente = lista_pacientes.get(pk=nueva_paciente_id)
         citas.hora = nueva_hora
+        citas.fecha = nueva_fecha
         citas.save()
-
+        
         return redirect('gestion_citas')
-
-    return render(request, 'html/modificar_citas.html', {' citas': citas})
+    
+    return render(request, 'html/modificar_citas.html', {'citas': citas, 'lista_doctores': lista_doctores, 'lista_pacientes': lista_pacientes})
 
 def registro_pacientes(request):
+    # Obtén la lista de pacientes existentes
     pacientes = Paciente.objects.all()
+
     if request.method == 'POST':
         nombre = request.POST['txtnombre']
         apellido = request.POST['txtapellido']
         usuario = request.POST['txtusuario']
         clave = request.POST['txtclave']
-        sexo = request.POST['txtsexo']
+        sexo = request.POST['slsexo']
     
         try:
-            pacientes = e.objects.create(nombre=nombre)
-            messages.success(request, 'Pacientes registrada exitosamente.')
+            # Crea un nuevo paciente y guárdalo en la base de datos
+            nuevo_paciente = Paciente(nombre=nombre, apellido=apellido, usuario=usuario, clave=clave, sexo=sexo)
+            nuevo_paciente.save()
+
+            messages.success(request, 'Paciente registrado exitosamente.')
             return redirect("registro_pacientes")
         except Exception as e:
             messages.error(request, 'No se pudo registrar al paciente: {}'.format(str(e)))
+    
     return render(request, 'html/registro_pacientes.html', {"pacientes": pacientes})
+
 
 def gestion_pacientes(request):
     listapacientes = Paciente.objects.all()
@@ -357,8 +378,8 @@ def pedir_cita(request):
 
         for cita in cita:
             doctor = cita.doctor
-            doctor.append(doctor)
-        return render(request, 'html/pedir_cita.html', {'doctores': doctor})
+            doctores.append(doctor)
+        return render(request, 'html/pedir_cita.html', {'doctores': doctores})
 
     return HttpResponse("No tienes permisos para acceder a esta página.")
 

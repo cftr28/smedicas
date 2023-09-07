@@ -1,0 +1,65 @@
+{% load static %}
+{% include "html/nav.html" %}
+
+{% load crispy_forms_tags %}
+
+<style>
+    .bg-transparent {
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Estilos para hacer más grande el texto de las etiquetas */
+    .etiqueta-grande {
+      font-size: 1.5em;
+    }
+
+    /* Estilos para hacer más grande el texto en la tabla */
+    .tabla-grande {
+      font-size: 1.2em;
+    }
+
+    /* Estilos para hacer más grande el título y el botón */
+    .titulo-grande {
+      font-size: 3em; /* Ajusta el tamaño de fuente como desees */
+    }
+
+    .boton-grande {
+      font-size: 2em; /* Ajusta el tamaño de fuente como desees */
+    }
+
+    /* Estilos para hacer más grande el tamaño de los cuadros de entrada de texto */
+    .form-control {
+      font-size: 1.5em; /* Ajusta el tamaño de fuente como desees */
+    }
+  </style>
+<div class="col-md-8 py-4 bg-white mx-auto">
+    <h2 class="display-4 text-dark etiqueta-grande titulo-grande">Listado de Citas Médicas</h2>
+    <table class="table table-blue table-striped tabla-grande">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Doctor</th>
+                <th>Paciente</th>
+                <th>Opciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cita in listacitas %}
+                <tr>
+                    <td class="centrado">{{ cita.fecha }}</td>
+                    <td class="centrado">{{ cita.hora }}</td>
+                    <td class="centrado">{{ cita.doctor.nombres }} {{ cita.doctor.apellidos }}</td>
+                    <td class="centrado">{{ cita.paciente.nombre }} {{ cita.paciente.apellido }}</td>
+                    <td class="centrado">
+                        <a href="/modificar_citas/{{ cita.hora }}" class="btn btn-info">Modificar</a>
+                        <a href="/eliminar_citas/{{ cita.hora }}" class="btn btn-danger">Eliminar</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+{% include "html/finalpagina.html" %}

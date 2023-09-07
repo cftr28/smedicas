@@ -3,16 +3,64 @@
 
 {% load crispy_forms_tags %}
 
+<style>
+    .bg-transparent {
+      background-color: rgba(255, 255, 255, 0.3);
+    }
 
+    /* Estilos para hacer más grande el texto de las etiquetas */
+    .etiqueta-grande {
+      font-size: 1.5em;
+    }
 
+    /* Estilos para hacer más grande el texto en la tabla */
+    .tabla-grande {
+      font-size: 1.2em;
+    }
 
+    /* Estilos para hacer más grande el título y el botón */
+    .titulo-grande {
+      font-size: 3em; /* Ajusta el tamaño de fuente como desees */
+    }
 
+    .boton-grande {
+      font-size: 2em; /* Ajusta el tamaño de fuente como desees */
+    }
 
-
-
-
-
-
-
-
+    /* Estilos para hacer más grande el tamaño de los cuadros de entrada de texto */
+    .form-control {
+      font-size: 1.5em; /* Ajusta el tamaño de fuente como desees */
+    }
+  </style>
+<div class="col-md-8 py-4 bg-white mx-auto">
+        <h2 class="display-4 text-dark etiqueta-grande titulo-grande">Listado de Docentes</h2>
+        <table class="table table-blue table-striped tabla-grande">
+          <thead>
+             <tr>
+              <th>Nombre</th>
+              <th>Apellido</th>
+              <th>Usuario</th>
+              <th>Clave</th>
+              <th>Sexo</th>
+                 <th colspan="2">Opciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for d in listapacientes %}
+              <tr>
+                <td class="centrado">{{ d.nombre }}</td>
+                <td class="centrado">{{ d.apellido }}</td>
+                <td class="centrado">{{ d.usuario }}</td>
+                <td class="centrado">{{ d.clave }}</td>
+                <td class="centrado">{{ d.sexo}}</td>
+                <td><a href="/modificar_pacientes/{{ d.nombre }}" class="btn btn-info">Modificar</a></td>
+                <td><a href="/eliminar_pacientes/{{ d.nombre }}" class="btn btn-danger">Eliminar</a></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+          
+        </table>
+      </div>
+    </div>
+  </div>
 {% include "html/finalpagina.html" %}

@@ -3,16 +3,75 @@
 
 {% load crispy_forms_tags %}
 
+<style>
+    .bg-transparent {
+      background-color: rgba(255, 255, 255, 0.3);
+    }
 
+    /* Estilos para hacer más grande el texto de las etiquetas */
+    .etiqueta-grande {
+      font-size: 1.5em;
+    }
 
+    /* Estilos para hacer más grande el texto en la tabla */
+    .tabla-grande {
+      font-size: 1.2em;
+    }
 
+    /* Estilos para hacer más grande el título y el botón */
+    .titulo-grande {
+      font-size: 3em; /* Ajusta el tamaño de fuente como desees */
+    }
 
+    .boton-grande {
+      font-size: 2em; /* Ajusta el tamaño de fuente como desees */
+    }
 
-
-
-
-
-
-
+    /* Estilos para hacer más grande el tamaño de los cuadros de entrada de texto */
+    .form-control {
+      font-size: 1.5em; /* Ajusta el tamaño de fuente como desees */
+    }
+  </style>
+<div class="col-md-8 py-4 bg-white mx-auto">
+        <h2 class="display-4 text-dark etiqueta-grande titulo-grande">Listado de Doctores</h2>
+        <table class="table table-blue table-striped tabla-grande">
+          <thead>
+             <tr>
+              <th>Nombre</th>
+              <th>Apellido</th>
+              <th>Correo</th>
+              <th>Especialidad</th>
+              <th>Pacientes</th>
+                 <th colspan="2">Opciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for d in listaDoctores %}
+              <tr>
+                <td class="centrado">{{ d.nombres }}</td>
+                <td class="centrado">{{ d.apellidos }}</td>
+                <td class="centrado">{{ d.correo}}</td>
+                <td class="centrado">{{ d.especialidad }}</td>
+                <td class="centrado">
+                    <ul>
+                        {% for paciente in d.pacientes.all %}
+                            <li>
+                                <span class="nombre-apellido">{{ paciente.nombre }}</span>
+                                <span class="nombre-apellido">{{ paciente.apellido }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </td>
+                
+                <td><a href="/modificar_doctor/{{ d.nombres }}" class="btn btn-info">Modificar</a></td>
+                <td><a href="/eliminar_doctor/{{ d.nombres}}" class="btn btn-danger">Eliminar</a></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+          
+        </table>
+      </div>
+    </div>
+  </div>
 
 {% include "html/finalpagina.html" %}

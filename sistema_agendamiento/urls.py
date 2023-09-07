@@ -3,14 +3,14 @@ from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 urlpatterns = [
-    path('index/', views.index, name='index'),
+     path('', views.index, name='index'),
     path('about/', views.about, name='about'),
     path('contact/', views.contact, name='contact'),
     path('cita/', views.cita, name='cita'),
-    path('cita/', views.cita, name='cita'),
     path('register/', views.register, name='register'),
     path('login/', views.login, name='login'),
-
+    path('logout/', views.logout, name='logout'),
+    path('gestionar_registros/', views.gestionar_registros, name='gestionar_registros'),
     path('registro_citas/', views.registro_citas, name='registro_citas'),
     path('gestion_citas/', views.gestion_citas, name='gestion_citas'),
     path('eliminar_citas/<str:hora>/', views.eliminar_citas, name='eliminar_citas'),

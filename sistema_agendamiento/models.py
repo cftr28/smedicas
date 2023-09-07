@@ -3,11 +3,8 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 class Especialidad(models.Model):
-    OPCIONES_FACULTAD = (
-        ('Neurocirujía', 'Neurocirujía'),
-    )
 
-    nombre = models.CharField(max_length=60, choices=OPCIONES_FACULTAD)
+    nombre = models.CharField(max_length=60)
 
     def __str__(self):
         return self.nombre
@@ -22,7 +19,7 @@ class Paciente(models.Model):
     apellido = models.CharField(max_length=50)
     usuario = models.EmailField(unique=True)
     clave = models.CharField(max_length=15)
-    sexo = models.CharField(max_length=15, choices=OPCION_SEXO, default='F')
+    sexo = models.CharField(max_length=15, choices=OPCION_SEXO)
  
 
     def __str__(self):
@@ -31,10 +28,10 @@ class Paciente(models.Model):
 
 class Doctor(models.Model):
     especialidad = models.ForeignKey(Especialidad, on_delete=models.CASCADE)
+    
     nombres = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=100)
     correo = models.EmailField(unique=True)
-    horario = models.TimeField(null=True, blank=True)
     pacientes = models.ManyToManyField('Paciente')
 
     def __str__(self):
