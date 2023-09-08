@@ -74,11 +74,12 @@
                     <label class="form-label etiqueta-grande">Pacientes:</label>
                     <select class="form-control" id="slPacientes" name="slPacientes" required>
                         <option value="" disabled selected>Seleccione un Paciente</option>
-                        {% for paciente in lista_pacientes %}
+                        {% for paciente in pacientes %}
                         <option value="{{ paciente.id }}">{{ paciente.nombre }}</option>
                         {% endfor %}
                     </select>
                 </div>
+                
 
                 {% csrf_token %}
                 <div class="pt-1 mb-0">

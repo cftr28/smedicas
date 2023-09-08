@@ -164,6 +164,7 @@ def modificar_especialidad(request, nombre):
         return redirect('gestion_especialidades')
 
     return render(request, 'html/modificar_especialidad.html', {' especialidad':  especialidad})
+
 def registro_citas(request):
     doctores = Doctor.objects.all()
     pacientes = Paciente.objects.all()
@@ -259,24 +260,31 @@ def eliminar_pacientes(request, nombre):
     else:
         messages.error(request, 'No se pudo eliminar al paciente')
 
+from django.shortcuts import get_object_or_404
+
 def modificar_pacientes(request, nombre):
-    pacientes = get_object_or_404(Paciente, nombre=nombre)
+    paciente = get_object_or_404(Paciente, nombre=nombre)  # Cambiar "pacientes" a "paciente"
+    
     if request.method == 'POST':
         nueva_nombre = request.POST['nueva_nombre']
         nueva_apellido = request.POST['nueva_apellido']
         nueva_usuario = request.POST['nueva_usuario']
         nueva_clave = request.POST['nueva_clave']
         nueva_sexo = request.POST['nueva_sexo']
-        pacientes.nombre = nueva_nombre
-        pacientes.apellido = nueva_apellido
-        pacientes.usuario = nueva_usuario
-        pacientes.clave = nueva_clave
-        pacientes.sexo = nueva_sexo
-        pacientes.save()
+        
+        # Actualizar los campos del paciente
+        paciente.nombre = nueva_nombre
+        paciente.apellido = nueva_apellido
+        paciente.usuario = nueva_usuario
+        paciente.clave = nueva_clave
+        paciente.sexo = nueva_sexo
+        
+        paciente.save()  # Guardar los cambios
 
         return redirect('gestion_pacientes')
 
-    return render(request, 'html/modificar_pacientes.html', {' pacientes':  pacientes})
+    return render(request, 'html/modificar_pacientes.html', {'paciente': paciente})  # Cambiar 'pacientes' a 'paciente' en el contexto
+
 
 def register(request):
     if request.method == 'POST':

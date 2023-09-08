@@ -69,9 +69,11 @@
                     </select>
                 </div>
 
+                
+
                 <div class="mb-3">
                     <label for="nuevo_paciente">Nuevos Pacientes:</label>
-                    <select class="form-control" id="slPacientes" name="slPacientes'" multiple>
+                    <select class="form-control" id="slPacientes" name="slPacientes'" required>
                         {% for paciente in lista_pacientes %}
                         <option value="{{ paciente.id }}" {% if paciente in doctor.pacientes.all %}selected{% endif %}>
                             {{ paciente.nombre }}
