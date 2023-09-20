@@ -20,15 +20,62 @@ from .models import Paciente, Cita, Doctor, Especialidad
 from django.http import HttpResponse
 from proyecto_agendamiento.settings import EMAIL_HOST_USER
 from .forms import *
-
-import os
-from django.conf import settings
 from django.http import HttpResponse
 from django.template.loader import get_template
 from xhtml2pdf import pisa
-from django.contrib.staticfiles import finders
-from io import BytesIO
 from urllib.request import urlopen  # Importa urlopen desde urllib.request
+from django.shortcuts import redirect, render
+from django.core.mail import EmailMessage
+from django.http import HttpResponse
+from django.core.mail import send_mail
+from django.contrib import messages
+
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
+
+# Otras importaciones aquí...
+
+def contact(request):
+    if request.method == 'POST':
+          
+        nombre = request.POST['nombre']
+        email = request.POST['email']
+        contenido = request.POST['contenido']
+
+        # Configuración de los parámetros de conexión SMTP
+        servidor_smtp = 'smtp.gmail.com'
+        puerto = 587
+        usuario = 'sdetutorias@gmail.com'
+        contraseña = 'hnlohetxsjpzsqgs'
+
+        # Crear el mensaje de correo
+        msg = MIMEMultipart()
+        msg['From'] = usuario
+        msg['To'] = 'cecilia.trueba@unl.edu.ec'  # Cambia la dirección de correo si es necesario
+        msg['Subject'] = 'Mensaje de contacto'
+        msg.attach(MIMEText(f'Se ha recibido un mensaje de {nombre},\nCorreo electrónico: {email}.\n\nDetalles del mensaje:\n\n{contenido}', 'plain'))
+
+        # Establecer la conexión SMTP y enviar el correo
+        try:
+            server = smtplib.SMTP(servidor_smtp, puerto)
+            server.starttls()
+            server.login(usuario, contraseña)
+            server.sendmail(usuario, 'cecilia.trueba@unl.edu.ec', msg.as_string())
+            server.quit()
+            messages.success(request, 'Correo enviado exitosamente.')
+
+            # Redirigir al usuario a la página de confirmación
+            return redirect('confirmar_email')
+        except Exception as e:
+            messages.error(request, f'Error al enviar el correo: {str(e)}')
+
+    return render(request, 'html/contact.html')
+
+def confirmar_email(request):
+    return render(request, 'html/confirmar_email.html')
+
 
 
 # Vistas de las diferentes paginas del proyecto.
@@ -40,10 +87,7 @@ def index(request):
     es_superuser = request.user.is_superuser
     return render(request, 'html/index.html', {'es_doctor': es_doctor, 'es_superuser': es_superuser})
 
-def contact(request):
-    es_doctor = is_doctor(request.user)
-    es_superuser = request.user.is_superuser
-    return render(request, 'html/contact.html', {'es_doctor': es_doctor, 'es_superuser': es_superuser})
+
 
 def cita(request):
     es_doctor = is_doctor(request.user)

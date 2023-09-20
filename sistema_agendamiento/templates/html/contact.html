@@ -1,34 +1,34 @@
 {% load static %}
 {% include "html/nav.html" %}
-
-<div class="page-section">
-  <div class="container">
-    <h1 class="text-center wow fadeInUp">Contactanos</h1>
-
-    <form class="contact-form mt-5">
-      <div class="row mb-3">
-        <div class="col-sm-6 py-2 wow fadeInLeft">
-          <label for="fullName">Name</label>
-          <input type="text" id="fullName" class="form-control" placeholder="Full name..">
+{% block content %}
+<div class="container">
+    <link rel="icon" href="data:,">
+    <h1>Contacto</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" class="form-control" required>
         </div>
-        <div class="col-sm-6 py-2 wow fadeInRight">
-          <label for="emailAddress">Email</label>
-          <input type="text" id="emailAddress" class="form-control" placeholder="Email address..">
+        <div class="form-group">
+            <label for="email">Correo Electrónico:</label>
+            <input type="email" id="email" name="email" class="form-control" required>
         </div>
-        <div class="col-12 py-2 wow fadeInUp">
-          <label for="subject">Subject</label>
-          <input type="text" id="subject" class="form-control" placeholder="Enter subject..">
+        <div class="form-group">
+            <label for="contenido">Mensaje:</label>
+            <textarea id="contenido" name="contenido" class="form-control" rows="4" required></textarea>
         </div>
-        <div class="col-12 py-2 wow fadeInUp">
-          <label for="message">Message</label>
-          <textarea id="message" class="form-control" rows="8" placeholder="Enter Message.."></textarea>
-        </div>
-      </div>
-      <button type="submit" class="btn btn-primary wow zoomIn">Send Message</button>
+        <button type="submit" class="btn btn-primary">Enviar</button>
     </form>
-  </div>
+
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
 </div>
-
-
+{% endblock %}
 
 {% include "html/finalpagina.html" %}

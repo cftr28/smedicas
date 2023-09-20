@@ -36,6 +36,7 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 MIDDLEWARE = [
+    'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -119,13 +120,14 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, ''),)
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MESSAGES_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+
 
 #configuración del mail
+
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = "sdetutorias@gmail.com"
 EMAIL_HOST_PASSWORD = "hnlohetxsjpzsqgs"
-
-CSRF_TRUSTED_ORIGINS = ['https://pis2.azurewebsites.net']

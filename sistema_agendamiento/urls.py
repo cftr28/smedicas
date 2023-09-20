@@ -11,6 +11,7 @@ urlpatterns = [
     path('login/', views.login, name='login'),
     path('logout/', views.logout, name='logout'),
     path('gestionar_registros/', views.gestionar_registros, name='gestionar_registros'),
+    path('confirmar_email/', views.confirmar_email, name='confirmar_email'),
     path('registro_citas/', views.registro_citas, name='registro_citas'),
     path('gestion_citas/', views.gestion_citas, name='gestion_citas'),
     path('eliminar_citas/<str:hora>/', views.eliminar_citas, name='eliminar_citas'),
