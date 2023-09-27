@@ -16,7 +16,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
 from .forms import CustomUserCreationForm
 from django.contrib import messages
-from .models import Paciente, Cita, Doctor, Especialidad
+from .models import Paciente, Cita, Doctor, Especialidad, CitaPaciente
 from django.http import HttpResponse
 from proyecto_agendamiento.settings import EMAIL_HOST_USER
 from .forms import *
@@ -501,3 +501,32 @@ def generar_pdf(request):
     if pisa_status.err:
         return HttpResponse('Error al generar PDF', content_type='text/plain')           
     return response
+
+def citapaciente(request):
+    if request.method == 'POST':
+        # Obtén los datos del formulario utilizando request.POST
+        nombre = request.POST.get('nombre')
+        correo = request.POST.get('correo')
+        telefono = request.POST.get('telefono')
+        cedula = request.POST.get('cedula')
+        fecha = request.POST.get('fecha')
+        hora = request.POST.get('hora')
+        
+        try:
+            # Crea una instancia de la Cita y guárdala en la base de datos
+            cita = CitaPaciente(nombre=nombre, correo=correo, telefono=telefono, cedula=cedula, fecha=fecha, hora=hora)
+            cita.save()
+            
+            # Muestra un mensaje de éxito y redirige a alguna página
+           
+            return redirect('confirmarcita')  # Redirige a la misma página de agendamiento de citas
+            
+        except Exception as e:
+            # Muestra un mensaje de error en caso de problemas
+            messages.error(request, 'No se pudo registrar la cita: {}'.format(str(e)))
+    
+   
+    return render(request, 'html/cita.html')
+
+def confirmarcita(request):
+    return render(request, 'html/confirmarcita.html')

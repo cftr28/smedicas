@@ -5,67 +5,101 @@
   <link rel="icon" href="data:,">
 
   <div class="container">
-    <h1 class="text-center mb-5 wow fadeInUp">Our Doctors</h1>
+    <h1 class="text-center mb-5 wow fadeInUp">Neurocirugía</h1>
     <div class="item">
       <div class="card-doctor">
         <div class="header">
-          <img src="/static/img/doctors/doctor_2.jpg" alt="">
+          <img src="{% static 'img/doctors/doctor_2.jpg' %}" alt="Doctor">
           <div class="meta">
             <a href="#"><span class="mai-call"></span></a>
             <a href="#"><span class="mai-logo-whatsapp"></span></a>
           </div>
         </div>
         <div class="body">
-          <p class="text-xl mb-0">Dr. Alexa Melvin</p>
-          <span class="text-sm text-grey">Dental</span>
+          <p class="text-xl mb-0">Dr. Marlon Rodrigo Reyes Luna</p>
+          <span class="text-sm text-grey">Neurocirujano</span>
         </div>
       </div>
     </div>
   </div>
-</div>
+  <div class="page-section">
+    <div class="container">
+      <h1 class="text-center wow fadeInUp">Agenda una Cita Médica</h1>
 
-<div class="page-section">
-  <div class="container">
-    <h1 class="text-center wow fadeInUp">Make an Appointment</h1>
+      <form class="main-form" method="post" action="{% url 'cita' %}">
+        {% csrf_token %}
 
-    <form class="main-form">
-      <div class="row mt-5 ">
-        <div class="col-12 col-sm-6 py-2 wow fadeInLeft">
-          <input type="text" class="form-control" placeholder="Full name">
+        <div class="row mt-5">
+          <div class="col-12 col-sm-6 py-2 wow fadeInLeft">
+            <input type="text" name="nombre" class="form-control" placeholder="Nombres Completos del Paciente">
+          </div>
+          <div class="col-12 col-sm-6 py-2 wow fadeInRight">
+            <input type="email" name="correo" class="form-control" placeholder="Correo Electrónico">
+          </div>
+          <div class="col-12 col-sm-6 py-2 wow fadeInRight">
+            <input type="text" name="telefono" class="form-control" placeholder="Teléfono - Celular">
+          </div>
+          <div class="col-12 col-sm-6 py-2 wow fadeInRight">
+            <input type="text" name="cedula" class="form-control" placeholder="Cédula" pattern="\d{10}" title="La cédula debe contener 10 dígitos numéricos">
+          </div>
+
+          <div class="col-24 col-sm-6 py-2 wow fadeInRight" data-wow-delay="300ms">
+            <input type="date" name="fecha" class="form-control">
+          </div>
+          <div class="col-12 col-sm-6 py-2 wow fadeInRight">
+            <input type="text" name="costo" class="form-control" placeholder="Cósto de consulta: $40" readonly>
+          </div>
+
+          <div class="col-12 col-sm-6 py-2 wow fadeInLeft" data-wow-delay="300ms">
+            <label for="hora">Hora (Seleccione una hora):</label>
+          </div>
+          <div class="col-12 col-sm-6 py-2 wow fadeInLeft" data-wow-delay="300ms">
+            <input type="text" name="hora" class="form-control" id="horaSeleccionada" readonly>
+          </div>
+          <div id="hora-buttons" class="col-12 py-2 wow fadeInLeft text-center" data-wow-delay="300ms">
+            <!-- Botones de hora generados dinámicamente -->
+          </div>
+          <script>
+            // Obtén el elemento donde se generarán los botones de hora
+            const horaButtonsContainer = document.getElementById("hora-buttons");
+            const horaSeleccionadaInput = document.getElementById("horaSeleccionada");
+            let horaSeleccionada = ""; // Inicializa la hora seleccionada
+
+            // Loop para generar botones de hora desde las 08:00 hasta las 20:00
+            for (let hour = 8; hour <= 20; hour++) {
+              // Crea un botón para cada hora
+              const button = document.createElement("button");
+              button.textContent = `${hour.toString().padStart(2, '0')}:00`; // Formato HH:00
+              button.classList.add("btn", "btn-primary", "mx-1"); // Agrega clases Bootstrap si es necesario
+              button.addEventListener("click", () => {
+                // Actualiza la hora seleccionada y el campo de texto
+                horaSeleccionada = `${hour.toString().padStart(2, '0')}:00`;
+                horaSeleccionadaInput.value = horaSeleccionada;
+                console.log(`Hora seleccionada: ${horaSeleccionada}`);
+              });
+
+              // Cambia el tipo de botón a "button" en lugar de "submit"
+              button.type = "button";
+
+              // Agrega el botón al contenedor
+              horaButtonsContainer.appendChild(button);
+            }
+          </script>
         </div>
-        <div class="col-12 col-sm-6 py-2 wow fadeInRight">
-          <input type="text" class="form-control" placeholder="Email address..">
+        <div class="text-center">
+          <!-- Botón de "Enviar" que enviará el formulario -->
+          <button type="submit" class="btn btn-primary mt-3 wow zoomIn" id="enviarButton">Enviar</button>
         </div>
-        <div class="col-12 col-sm-6 py-2 wow fadeInLeft" data-wow-delay="300ms">
-          <input type="date" class="form-control">
-        </div>
-        <div class="col-12 col-sm-6 py-2 wow fadeInRight" data-wow-delay="300ms">
-          <select name="departement" id="departement" class="custom-select">
-            <option value="general">General Health</option>
-            <option value="cardiology">Cardiology</option>
-            <option value="dental">Dental</option>
-            <option value="neurology">Neurology</option>
-            <option value="orthopaedics">Orthopaedics</option>
-          </select>
-        </div>
-        <div class="col-12 py-2 wow fadeInUp" data-wow-delay="300ms">
-          <input type="text" class="form-control" placeholder="Number..">
-        </div>
-        <div class="col-12 py-2 wow fadeInUp" data-wow-delay="300ms">
-          <textarea name="message" id="message" class="form-control" rows="6" placeholder="Enter message.."></textarea>
-        </div>
-      </div>
-      <!--
-      <div class="col-12 col-sm-6 py-2 wow fadeInLeft" data-wow-delay="300ms">
-        <label for="hora">Horario (Seleccione una hora):</label>
-        <div id="hora-buttons">
-         Los botones de hora se generarán dinámicamente aquí -->
-        </div><center>
-        <button type="submit" class="btn btn-primary mt-3 wow zoomIn">Enviar</button></center>
-    </form>
+      </form>
+      <script>
+        const enviarButton = document.getElementById("enviarButton");
+        enviarButton.addEventListener("click", () => {
+          // Aquí puedes agregar el código para enviar el formulario, por ejemplo:
+          // document.querySelector("form.main-form").submit();
+          console.log("Formulario enviado");
+        });
+      </script>
+    </div> <!-- .container -->
   </div>
-</div> <!-- .page-section -->
 </div>
-
-
 {% include "html/finalpagina.html" %}

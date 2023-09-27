@@ -44,4 +44,15 @@ class Cita(models.Model):
     hora = models.TimeField()
 
     def __str__(self):
-        return f'Cita with {self.doctor} on {self.fecha} at {self.hora}'
+        return f'Cita con el Dr. {self.doctor} el {self.fecha} a las {self.hora}'
+    
+class CitaPaciente(models.Model):
+    nombre = models.CharField(max_length=100)
+    correo = models.EmailField(unique=False) 
+    telefono = models.CharField(max_length=100)
+    cedula = models.CharField(max_length=100)
+    fecha = models.DateField()
+    hora = models.TimeField() 
+
+    def __str__(self):
+        return f'Cita con el paciente {self.nombre } el {self.fecha} a las {self.hora}'

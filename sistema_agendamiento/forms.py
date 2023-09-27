@@ -40,3 +40,8 @@ class PacienteForm(forms.ModelForm):
         model=Paciente
         fields='__all__'
 
+class CitaPacienteForm(forms.ModelForm):
+    class Meta:
+        model=CitaPaciente
+        fields='__all__'
+
