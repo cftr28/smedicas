@@ -357,20 +357,7 @@ def logout(request):
     auth_logout(request)
     return redirect('/')
 
-@user_passes_test(is_doctor)
-def aceptar_cita(request):
-    user = request.user
-    if user.is_authenticated:
-        citas = Cita.objects.filter(especialidad__doctor__correo=user.email)
-        lista_pacientes = []
 
-        for cita in  citas:
-            #docente = asignatura.docente
-            paciente = cita.paciente
-            lista_pacientes.append(paciente)
-        return render(request, 'html/aceptar_cita.html', {'lista_pacientes': lista_pacientes})
-
-    return HttpResponse("No tienes permisos para acceder a esta página.")
 
 @login_required
 def enviar_solicitud_aceptada_paciente(request):
@@ -395,24 +382,7 @@ def enviar_solicitud_aceptada_paciente(request):
 
     return render(request, 'html/aceptar_cita.html')
 
-def enviar_solicitud_rechazada_paciente(request):
-    if request.method == 'POST':
-        nombre_paciente = request.POST['txtnombre1']
-        cita_info = request.POST['txtcita']
-        correo_paciente = request.POST['correo_cita']
 
-            # Envío de correo electrónico
-        subject = f'Solicitud de Cita'
-        message = f'Estimado/a {nombre_paciente},\n\nSe ha rechazado su cita.\n\nDetalles de la solicitud:\n '\
-        f' \nInformación: {cita_info}\n'
-        from_email = EMAIL_HOST_USER
-        recipient_list = [correo_paciente]
-
-        send_mail(subject, message, from_email, recipient_list)
-        messages.success(request, 'Correo enviado exitosamente.')
-        #return redirect('html/confirmacion_envio_email.html')
-
-    return render(request, 'html/aceptar_cita.html')
 
 def gestionar_registros(request):
     return render(request, 'html/gestionar_registros.html')
@@ -421,56 +391,6 @@ def inicio_paciente(request):
     listapaciente = Paciente.objects.all()
     return render(request, 'html/inicio_paciente.html', {"lista":listapaciente})
 
-@login_required
-def pedir_cita(request):
-    user = request.user
-    if user.is_authenticated:
-        cita=Cita.objects.filter(paciente__usuario=user.email)
-        doctores = []
-
-        for cita in cita:
-            doctor = cita.doctor
-            doctores.append(doctor)
-        return render(request, 'html/pedir_cita.html', {'doctores': doctores})
-
-    return HttpResponse("No tienes permisos para acceder a esta página.")
-
-@login_required
-def enviar_solicitud(request):
-    user = request.user
-    if request.method == 'POST':
-        correo_paciente= user.email
-        nombre_paciente = request.POST.get('nombre')
-        hora_cita = request.POST.get('hora')
-        dia_cita = request.POST.get('dia')
-        informacion_cita = request.POST.get('cita')
-        correo_doctor = request.POST.get('correo_doctor')
-        # ... Resto de tu código ...
-        context = {
-            'nombre_paciente': nombre_paciente,
-            'hora_cita': hora_cita,
-            'dia_cita': dia_cita,
-            'informacion_cita': informacion_cita,
-            'correo_paciente': correo_paciente,
-            'correo_doctor': correo_doctor,
-        }
-        email_content = render_to_string('html/email_template.html', context)
-
-        # Crear y enviar el correo electrónico con formato HTML
-        subject = 'Solicitud de Cita'
-        from_email = EMAIL_HOST_USER
-        recipient_list = [correo_paciente]
-
-        email = EmailMessage(subject, email_content, from_email, recipient_list)
-        email.content_subtype = 'html'  # Indicar que el contenido es HTML
-        email.send()
-        
-        return render(request, 'html/confirmacion_envio_email.html')  # Renderizar una página de éxito o redirigir a donde sea necesario
-    
-    return render(request, 'html/perdir_cita.html')
-
-def confirmacion_envio_email(request):
-    return render(request, 'html/confirmacion_envio_email.html')
 
 def fetch_resources(uri, rel):
     # Función de callback para cargar recursos como imágenes
@@ -502,30 +422,49 @@ def generar_pdf(request):
         return HttpResponse('Error al generar PDF', content_type='text/plain')           
     return response
 
+
 def citapaciente(request):
     if request.method == 'POST':
-        # Obtén los datos del formulario utilizando request.POST
-        nombre = request.POST.get('nombre')
-        correo = request.POST.get('correo')
-        telefono = request.POST.get('telefono')
-        cedula = request.POST.get('cedula')
-        fecha = request.POST.get('fecha')
-        hora = request.POST.get('hora')
-        
+        nombre = request.POST['nombre']
+        correo = request.POST['correo']
+        telefono = request.POST['telefono']
+        cedula = request.POST['cedula']
+        fecha = request.POST['fecha']
+        hora = request.POST['hora']
+
+        # Configuración de los parámetros de conexión SMTP
+        servidor_smtp = 'smtp.gmail.com'
+        puerto = 587
+        usuario = 'sdetutorias@gmail.com'
+        contraseña = 'hnlohetxsjpzsqgs'
+
+        # Crear el mensaje de correo
+        msg = MIMEMultipart()
+        msg['From'] = usuario
+        msg['To'] = correo + ', cecilia.trueba@unl.edu.ec'  # Concatena los correos con comas
+        msg['Subject'] = 'Nueva cita médica registrada'
+        msg.attach(MIMEText(f'Nombre: {nombre}\nCorreo: {correo}\nTeléfono: {telefono}\nCédula: {cedula}\nFecha: {fecha}\nHora: {hora}', 'plain'))
+
+        # Establecer la conexión SMTP y enviar el correo
         try:
-            # Crea una instancia de la Cita y guárdala en la base de datos
+            server = smtplib.SMTP(servidor_smtp, puerto)
+            server.starttls()
+            server.login(usuario, contraseña)
+            server.sendmail(usuario, [correo, 'cecilia.trueba@unl.edu.ec'], msg.as_string())
+            server.quit()
+
+            # Guardar los datos en la base de datos
             cita = CitaPaciente(nombre=nombre, correo=correo, telefono=telefono, cedula=cedula, fecha=fecha, hora=hora)
             cita.save()
-            
-            # Muestra un mensaje de éxito y redirige a alguna página
-           
-            return redirect('confirmarcita')  # Redirige a la misma página de agendamiento de citas
-            
+
+            messages.success(request, 'Correo enviado y cita registrada exitosamente.')
+
+            # Redirigir al usuario a la página de confirmación
+            return redirect('confirmarcita')
+
         except Exception as e:
-            # Muestra un mensaje de error en caso de problemas
-            messages.error(request, 'No se pudo registrar la cita: {}'.format(str(e)))
-    
-   
+            messages.error(request, f'Error al enviar el correo o registrar la cita: {str(e)}')
+
     return render(request, 'html/cita.html')
 
 def confirmarcita(request):

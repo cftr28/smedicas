@@ -57,15 +57,14 @@
                 <a class="navbar-brand" href="#"><span class="text-primary">One</span>-Health</a>
                 <div class="collapse navbar-collapse" id="navbarSupport">
                     <ul class="navbar-nav ml-auto">
+
                         {% if es_superuser %}
-                        <li class="nav-item">
-                            <a class="btn btn-primary ml-lg-3" href="/gestionar_registros">Gestionar Registros</a>
-                        </li>
+                        <script>
+                            window.location.href = "/gestionar_registros";
+                        </script>
                         <li class="nav-item">
                             <a class="btn btn-primary ml-lg-3" href="/logout">Cerrar Sesión</a>
-
                         </li>
-
                         {% else %}
                         {% if not user.is_authenticated %}
                         <li class="nav-item">
@@ -83,10 +82,8 @@
                         <li class="nav-item">
                             <a class="btn btn-primary ml-lg-3" href="/login">Login</a>
                         </li>
-
                         {% else %}
-                        {% if user.is_paciente %}
-
+                      
                         <li class="nav-item">
                             <a class="btn btn-primary ml-lg-3" href="{% url 'index' %}">Inicio</a>
                         </li>
@@ -96,19 +93,24 @@
                         <li class="nav-item">
                             <a class="btn btn-primary ml-lg-3" href="/contact">Contacto</a>
                         </li>
-                        <a class="btn btn-primary ml-lg-3" href="/cita">Agendar Cita</a>
+                        <li class="nav-item">
+                            <a class="btn btn-primary ml-lg-3" href="/cita">Agendar Cita</a>
                         </li>
                         <li class="nav-item">
                             <a class="btn btn-primary ml-lg-3" href="/logout">Cerrar Sesión</a>
-
                         </li>
+                       
                         {% endif %}
                         {% endif %}
-                        {% endif %}
-
                     </ul>
-                </div> <!-- .navbar-collapse -->
-            </div> <!-- .container -->
+                </div>
+            </div>
+        </nav>
+
+
+        </ul>
+        </div> <!-- .navbar-collapse -->
+        </div> <!-- .container -->
         </nav>
     </header>
 
